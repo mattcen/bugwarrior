@@ -191,7 +191,7 @@ class TestTrelloService(ConfigTest):
             'trellolist': 'List 1',
             'trellocard': 'Card 1',
             'trellocardid': 'C4RD',
-            'trellocardidshort': 1,
+            'trellocardidshort': '1',
             'trellodescription': 'some description',
             'trelloshortlink': 'abcd',
             'trelloshorturl': 'https://trello.com/c/AAaaBBbb',
