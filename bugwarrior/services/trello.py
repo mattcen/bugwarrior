@@ -49,7 +49,7 @@ class TrelloIssue(Issue):
         return self.build_default_description(
             title=self.record['name'],
             url=self.record['shortUrl'],
-            number=self.record['idShort'],
+            number=str(self.record['idShort']),
             cls='task',
         )
 
@@ -66,7 +66,7 @@ class TrelloIssue(Issue):
             'priority': self.origin['default_priority'],
             self.NAME: self.record['name'],
             self.CARDID: self.record['id'],
-            self.SHORTCARDID: self.record['idShort'],
+            self.SHORTCARDID: str(self.record['idShort']),
             self.DESCRIPTION: self.record['desc'],
             self.BOARD: self.extra['boardname'],
             self.LIST: self.extra['listname'],
