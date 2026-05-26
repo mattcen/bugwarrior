@@ -42,6 +42,7 @@ class GithubConfig(config.ServiceConfig):
     exclude_pull_requests: bool = False
     include_user_issues: bool = True
     involved_issues: bool = False
+    requested_reviews: bool = False
     host: config.NoSchemeUrl = 'github.com'
     body_length: int = sys.maxsize
     project_owner_prefix: bool = False
@@ -437,6 +438,14 @@ class GithubService(Service[GithubIssue]):
             issues.update(
                 self.get_query(
                     'involves:{user} state:open'.format(user=self.config.username)
+                )
+            )
+
+        if self.config.requested_reviews:
+            # PR review requests aren't returned by the `involves` filter
+            issues.update(
+                self.get_query(
+                    'review-requested:{user} state:open'.format(user=self.config.username)
                 )
             )
 

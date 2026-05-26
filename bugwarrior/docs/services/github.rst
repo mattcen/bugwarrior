@@ -135,6 +135,16 @@ and ensure bugwarrior only tracks issues:
 
     github.exclude_pull_requests = True
 
+Get requested PR Reviews
+++++++++++++++++++++++++
+
+To include any pull requests which are awaiting your review:
+
+.. config::
+    :fragment: github
+
+    github.requested_reviews = True
+
 Get involved issues
 +++++++++++++++++++
 
