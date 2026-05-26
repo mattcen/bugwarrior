@@ -159,12 +159,6 @@ class GithubClient(Client):
         )
         return self._getter(url)
 
-    def get_pulls(self, username: str, repo: str) -> list[Any]:
-        url = self._api_url(
-            "/repos/{username}/{repo}/pulls?per_page=100", username=username, repo=repo
-        )
-        return self._getter(url)
-
     def _getter(self, url: str, subkey: str | None = None) -> list[Any]:
         """Pagination utility.  Obnoxious."""
         results = []
@@ -389,10 +383,6 @@ class GithubService(Service[GithubIssue]):
             body = body[:max_length]
 
         return body
-
-    def _reqs(self, tag: str) -> list[tuple[str, Any]]:
-        """Grab all the pull requests"""
-        return [(tag, i) for i in self.client.get_pulls(*tag.split('/'))]
 
     def get_owner(self, issue: GithubIssueEntry) -> str | None:
         if issue[1]['assignee']:
