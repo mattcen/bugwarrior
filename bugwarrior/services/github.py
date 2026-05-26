@@ -220,6 +220,8 @@ class GithubIssue(Issue):
     TYPE = 'githubtype'
     NUMBER = 'githubnumber'
     USER = 'githubuser'
+    ASSIGNEES = 'githubassignees'
+    REVIEW_REQUESTED = 'githubreviewrequested'
     NAMESPACE = 'githubnamespace'
     STATE = 'githubstate'
     DRAFT = 'githubdraft'
@@ -236,6 +238,8 @@ class GithubIssue(Issue):
         TYPE: {'type': 'string', 'label': 'Github Type'},
         NUMBER: {'type': 'numeric', 'label': 'Github Issue/PR #'},
         USER: {'type': 'string', 'label': 'Github User'},
+        ASSIGNEES: {'type': 'string', 'label': 'Github Issue Assignees'},
+        REVIEW_REQUESTED: {'type': 'numeric', 'label': 'Github PR Review Requested'},
         NAMESPACE: {'type': 'string', 'label': 'Github Namespace'},
         STATE: {'type': 'string', 'label': 'GitHub State'},
         DRAFT: {'type': 'numeric', 'label': 'GitHub Draft'},
@@ -262,6 +266,8 @@ class GithubIssue(Issue):
             self.REPO: self.record['repo'],
             self.TYPE: self.extra['type'],
             self.USER: self.record['user']['login'],
+            self.ASSIGNEES: [a['login'] for a in self.record['assignees']],
+            self.REVIEW_REQUESTED: int(self.record.get('review_requested', 0)),
             self.TITLE: self.record['title'],
             self.BODY: self.extra['body'],
             self.MILESTONE: milestone,
@@ -443,11 +449,15 @@ class GithubService(Service[GithubIssue]):
 
         if self.config.requested_reviews:
             # PR review requests aren't returned by the `involves` filter
-            issues.update(
-                self.get_query(
+            requested_reviews = self.get_query(
                     'review-requested:{user} state:open'.format(user=self.config.username)
                 )
-            )
+            # The PR content doesn't make it easy to see that it requests our
+            # review, so add this metadata given we know that's one of our
+            # filter criteria.
+            for pr in requested_reviews.keys():
+                requested_reviews[pr][1]["review_requested"] = True
+            issues.update(requested_reviews)
 
         if self.config.include_user_repos:
             # Only query for all repos if an explicit
