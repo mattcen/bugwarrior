@@ -221,6 +221,7 @@ class GithubIssue(Issue):
     NUMBER = 'githubnumber'
     USER = 'githubuser'
     ASSIGNED = 'githubassigned'
+    UNASSIGNED = 'githubunassigned'
     REVIEW_REQUESTED = 'githubreviewrequested'
     NAMESPACE = 'githubnamespace'
     STATE = 'githubstate'
@@ -238,7 +239,8 @@ class GithubIssue(Issue):
         TYPE: {'type': 'string', 'label': 'Github Type'},
         NUMBER: {'type': 'numeric', 'label': 'Github Issue/PR #'},
         USER: {'type': 'string', 'label': 'Github User'},
-        ASSIGNED: {'type': 'numeric', 'label': 'Github Issue Assigned'},
+        ASSIGNED: {'type': 'numeric', 'label': 'Github Issue Assigned To Me'},
+        UNASSIGNED: {'type': 'numeric', 'label': 'Github Issue Unassigned'},
         REVIEW_REQUESTED: {'type': 'numeric', 'label': 'Github PR Review Requested'},
         NAMESPACE: {'type': 'string', 'label': 'Github Namespace'},
         STATE: {'type': 'string', 'label': 'GitHub State'},
@@ -268,6 +270,7 @@ class GithubIssue(Issue):
             self.USER: self.record['user']['login'],
             self.ASSIGNED: int(self.config.login in [
                 a['login'] for a in self.record.get('assignees', []) if 'login' in a]),
+            self.UNASSIGNED: not len(self.record['assignees']),
             self.REVIEW_REQUESTED: int(self.record.get('review_requested', 0)),
             self.TITLE: self.record['title'],
             self.BODY: self.extra['body'],
