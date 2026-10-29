@@ -270,7 +270,7 @@ class GithubIssue(Issue):
             self.USER: self.record['user']['login'],
             self.ASSIGNED: int(self.config.login in [
                 a['login'] for a in self.record.get('assignees', []) if 'login' in a]),
-            self.UNASSIGNED: not len(self.record['assignees']),
+            self.UNASSIGNED: int(not len(self.record['assignees'])),
             self.REVIEW_REQUESTED: int(self.record.get('review_requested', 0)),
             self.TITLE: self.record['title'],
             self.BODY: self.extra['body'],
