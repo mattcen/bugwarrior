@@ -266,7 +266,8 @@ class GithubIssue(Issue):
             self.REPO: self.record['repo'],
             self.TYPE: self.extra['type'],
             self.USER: self.record['user']['login'],
-            self.ASSIGNED: int(self.config.username in [a.get('login', '') for a in self.record.get('assignees', [])]),
+            self.ASSIGNED: int(self.config.login in [
+                a['login'] for a in self.record.get('assignees', []) if 'login' in a]),
             self.REVIEW_REQUESTED: int(self.record.get('review_requested', 0)),
             self.TITLE: self.record['title'],
             self.BODY: self.extra['body'],
